@@ -1,0 +1,50 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getNewsList, getNewsDetail } from "../../lib/microcms";
+import type { News } from "../../lib/microcms";
+
+export async function getStaticPaths() {
+  const response = await getNewsList();
+  return response.contents.map((news: News) => ({
+    params: { id: news.id },
+    props: { news },
+  }));
+}
+
+const { news } = Astro.props;
+---
+
+<BaseLayout
+  title={news.title}
+  description={news.body.replace(/<[^>]*>/g, "").slice(0, 120)}
+>
+  <section class="py-16">
+    <div class="mx-auto max-w-content px-4">
+      <a href="/news" class="text-sm text-coffee-600 hover:text-coffee-700">
+        ← お知らせ一覧に戻る
+      </a>
+
+      <article class="mt-8">
+        <header>
+          <time
+            datetime={news.publishedAt}
+            class="text-sm text-gray-500"
+          >
+            {new Date(news.publishedAt).toLocaleDateString("ja-JP")}
+          </time>
+          {news.category && news.category.length > 0 && (
+            <span class="ml-2 rounded-full bg-coffee-50 px-3 py-0.5 text-xs font-medium text-coffee-700">
+              {news.category[0]}
+            </span>
+          )}
+          <h1 class="mt-2 text-3xl font-bold text-gray-900">{news.title}</h1>
+        </header>
+
+        <div
+          class="prose prose-gray mt-8 max-w-none"
+          set:html={news.body}
+        />
+      </article>
+    </div>
+  </section>
+</BaseLayout>

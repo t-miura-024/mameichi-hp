@@ -1,0 +1,115 @@
+---
+const navItems = [
+  { label: "トップ", href: "/" },
+  { label: "お店について", href: "/about" },
+  { label: "豆一覧", href: "/beans" },
+  { label: "アクセス", href: "/access" },
+  { label: "お知らせ", href: "/news" },
+  { label: "ギャラリー", href: "/gallery" },
+  { label: "お問い合わせ", href: "/contact" },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<header class="sticky top-0 z-50 border-b border-gray-100 bg-white/95 backdrop-blur-sm">
+  <div class="mx-auto flex max-w-content items-center justify-between px-4 py-4">
+    <a href="/" class="text-lg font-bold tracking-wider text-coffee-600">
+      焙煎工房 函館豆壱
+    </a>
+
+    <!-- Desktop nav -->
+    <nav class="hidden md:block" aria-label="メインナビゲーション">
+      <ul class="flex items-center gap-6">
+        {navItems.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              class:list={[
+                "text-sm transition-colors hover:text-coffee-600",
+                currentPath === item.href
+                  ? "font-medium text-coffee-600"
+                  : "text-gray-600",
+              ]}
+            >
+              {item.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <!-- Mobile hamburger button -->
+    <button
+      type="button"
+      class="md:hidden"
+      id="mobile-menu-btn"
+      aria-label="メニューを開く"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+    >
+      <svg
+        class="h-6 w-6 text-gray-700"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          id="hamburger-icon"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M4 6h16M4 12h16M4 18h16"
+        />
+        <path
+          id="close-icon"
+          class="hidden"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M6 18L18 6M6 6l12 12"
+        />
+      </svg>
+    </button>
+  </div>
+
+  <!-- Mobile nav -->
+  <nav
+    id="mobile-menu"
+    class="hidden border-t border-gray-100 md:hidden"
+    aria-label="モバイルナビゲーション"
+  >
+    <ul class="space-y-1 px-4 py-4">
+      {navItems.map((item) => (
+        <li>
+          <a
+            href={item.href}
+            class:list={[
+              "block rounded-md px-3 py-2 text-sm transition-colors hover:bg-coffee-50",
+              currentPath === item.href
+                ? "font-medium text-coffee-600"
+                : "text-gray-600",
+            ]}
+          >
+            {item.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+</header>
+
+<script>
+  const btn = document.getElementById("mobile-menu-btn");
+  const menu = document.getElementById("mobile-menu");
+  const hamburgerIcon = document.getElementById("hamburger-icon");
+  const closeIcon = document.getElementById("close-icon");
+
+  btn?.addEventListener("click", () => {
+    const isOpen = menu?.classList.toggle("hidden") === false;
+    btn.setAttribute("aria-expanded", String(isOpen));
+    btn.setAttribute("aria-label", isOpen ? "メニューを閉じる" : "メニューを開く");
+    hamburgerIcon?.classList.toggle("hidden", isOpen);
+    closeIcon?.classList.toggle("hidden", !isOpen);
+  });
+</script>

@@ -1,0 +1,94 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="アクセス・店舗情報"
+  description="焙煎工房 函館豆壱へのアクセス・店舗情報。函館市電 中央病院前駅より徒歩3分。"
+>
+  <section class="py-16">
+    <div class="mx-auto max-w-content px-4">
+      <h1 class="text-3xl font-bold text-gray-900">アクセス・店舗情報</h1>
+
+      <div class="mt-12 grid gap-12 md:grid-cols-2">
+        <!-- Store info -->
+        <div>
+          <h2 class="text-xl font-bold text-coffee-600">店舗情報</h2>
+          <dl class="mt-6 space-y-4">
+            <div>
+              <dt class="text-sm font-medium text-gray-500">店名</dt>
+              <dd class="mt-1 text-gray-900">焙煎工房 函館豆壱</dd>
+            </div>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">住所</dt>
+              <dd class="mt-1 text-gray-900">〒040-0011 北海道函館市本町31-35</dd>
+            </div>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">電話番号</dt>
+              <dd class="mt-1">
+                <a href="tel:0138-83-1826" class="text-coffee-600 hover:text-coffee-700">
+                  0138-83-1826
+                </a>
+              </dd>
+            </div>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">アクセス</dt>
+              <dd class="mt-1 text-gray-900">函館市電2系統 中央病院前駅 徒歩3分</dd>
+            </div>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">駐車場</dt>
+              <dd class="mt-1 text-gray-900">なし（近隣にコインパーキングあり）</dd>
+            </div>
+          </dl>
+
+          <h2 class="mt-10 text-xl font-bold text-coffee-600">営業時間</h2>
+          <dl class="mt-6 space-y-2 text-sm">
+            <div class="flex">
+              <dt class="w-20 font-medium text-gray-700">月曜日</dt>
+              <dd class="text-gray-900">10:00〜19:00</dd>
+            </div>
+            <div class="flex">
+              <dt class="w-20 font-medium text-gray-700">火曜日</dt>
+              <dd class="text-gray-400">定休日</dd>
+            </div>
+            <div class="flex">
+              <dt class="w-20 font-medium text-gray-700">水曜日</dt>
+              <dd class="text-gray-400">定休日</dd>
+            </div>
+            <div class="flex">
+              <dt class="w-20 font-medium text-gray-700">木曜日</dt>
+              <dd class="text-gray-900">10:00〜19:00</dd>
+            </div>
+            <div class="flex">
+              <dt class="w-20 font-medium text-gray-700">金曜日</dt>
+              <dd class="text-gray-900">10:00〜19:00</dd>
+            </div>
+            <div class="flex">
+              <dt class="w-20 font-medium text-gray-700">土曜日</dt>
+              <dd class="text-gray-900">10:00〜18:00</dd>
+            </div>
+            <div class="flex">
+              <dt class="w-20 font-medium text-gray-700">日曜日</dt>
+              <dd class="text-gray-900">10:00〜18:00</dd>
+            </div>
+          </dl>
+        </div>
+
+        <!-- Map -->
+        <div>
+          <h2 class="text-xl font-bold text-coffee-600">地図</h2>
+          <div class="mt-6 aspect-square w-full overflow-hidden rounded-lg">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2932.4!2d140.7356!3d41.7714!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2z5YyX5rW36YGT5Ye96aSo5biC5pys55S6MzEtMzU!5e0!3m2!1sja!2sjp!4v1"
+              class="h-full w-full border-0"
+              allowfullscreen=""
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              title="焙煎工房 函館豆壱の地図"
+            ></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

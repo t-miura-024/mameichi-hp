@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-bg: #ffffff;
+    --color-bg-section: #f5f5f5;
+    --color-text: #333333;
+    --color-text-sub: #666666;
+    --color-accent: #6f4e37;
+    --color-accent-hover: #5a3e2b;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply text-[var(--color-text)] bg-[var(--color-bg)] antialiased;
+  }
+}

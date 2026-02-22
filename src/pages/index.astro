@@ -1,0 +1,89 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="焙煎工房 函館豆壱">
+  <!-- Hero -->
+  <section class="bg-coffee-50 py-20 text-center">
+    <div class="mx-auto max-w-content px-4">
+      <h1 class="text-3xl font-bold tracking-wider text-coffee-700 md:text-5xl">
+        焙煎工房 函館豆壱
+      </h1>
+      <p class="mt-4 text-lg text-gray-600">
+        一杯のために、一粒から。
+      </p>
+    </div>
+  </section>
+
+  <!-- About snippet -->
+  <section class="py-16">
+    <div class="mx-auto max-w-content px-4 text-center">
+      <h2 class="text-2xl font-bold text-gray-900">お店について</h2>
+      <p class="mx-auto mt-4 max-w-2xl text-gray-600">
+        函館の地で、厳選した生豆を一つひとつ丁寧に焙煎しています。
+        豆の個性を最大限に引き出し、香り高いコーヒー豆をお届けします。
+      </p>
+      <a
+        href="/about"
+        class="mt-6 inline-block rounded-md bg-coffee-600 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-coffee-700"
+      >
+        詳しく見る
+      </a>
+    </div>
+  </section>
+
+  <!-- Beans pickup -->
+  <section class="bg-gray-50 py-16">
+    <div class="mx-auto max-w-content px-4">
+      <h2 class="text-center text-2xl font-bold text-gray-900">おすすめの豆</h2>
+      <p class="mt-2 text-center text-sm text-gray-500">
+        ※ microCMS 連携後、おすすめの豆が表示されます
+      </p>
+      <div class="mt-6 text-center">
+        <a
+          href="/beans"
+          class="text-sm font-medium text-coffee-600 hover:text-coffee-700"
+        >
+          豆一覧を見る →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- News -->
+  <section class="py-16">
+    <div class="mx-auto max-w-content px-4">
+      <h2 class="text-center text-2xl font-bold text-gray-900">お知らせ</h2>
+      <p class="mt-2 text-center text-sm text-gray-500">
+        ※ microCMS 連携後、最新のお知らせが表示されます
+      </p>
+      <div class="mt-6 text-center">
+        <a
+          href="/news"
+          class="text-sm font-medium text-coffee-600 hover:text-coffee-700"
+        >
+          お知らせ一覧を見る →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Access snippet -->
+  <section class="bg-gray-50 py-16">
+    <div class="mx-auto max-w-content px-4 text-center">
+      <h2 class="text-2xl font-bold text-gray-900">アクセス</h2>
+      <p class="mt-4 text-gray-600">
+        〒040-0011 北海道函館市本町31-35
+      </p>
+      <p class="mt-1 text-sm text-gray-500">
+        函館市電2系統 中央病院前駅 徒歩3分
+      </p>
+      <a
+        href="/access"
+        class="mt-6 inline-block rounded-md border border-coffee-600 px-6 py-3 text-sm font-medium text-coffee-600 transition-colors hover:bg-coffee-600 hover:text-white"
+      >
+        アクセス詳細を見る
+      </a>
+    </div>
+  </section>
+</BaseLayout>
