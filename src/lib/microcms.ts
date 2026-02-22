@@ -37,12 +37,6 @@ export type Bean = {
   sortOrder?: number;
 } & MicroCMSListContent;
 
-export type GalleryItem = {
-  image: MicroCMSImage;
-  caption?: string;
-  sortOrder?: number;
-} & MicroCMSListContent;
-
 // ----------------------------------------------------------------
 // Fetch helpers
 // ----------------------------------------------------------------
@@ -75,9 +69,3 @@ export async function getBeansDetail(contentId: string) {
   });
 }
 
-export async function getGalleryList(limit = 100, offset = 0) {
-  return client.getList<GalleryItem>({
-    endpoint: "gallery",
-    queries: { limit, offset, orders: "sortOrder" },
-  });
-}
