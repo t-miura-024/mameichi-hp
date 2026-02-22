@@ -1,43 +1,43 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { getBeansList, getBeansDetail } from "../../lib/microcms";
-import type { Bean } from "../../lib/microcms";
+import { getProductList, getProductDetail } from "../../lib/microcms";
+import type { Product } from "../../lib/microcms";
 
 export async function getStaticPaths() {
-  const response = await getBeansList();
-  return response.contents.map((bean: Bean) => ({
-    params: { id: bean.id },
-    props: { bean },
+  const response = await getProductList();
+  return response.contents.map((product: Product) => ({
+    params: { id: product.id },
+    props: { product },
   }));
 }
 
-const { bean } = Astro.props;
+const { product } = Astro.props;
 ---
 
 <BaseLayout
-  title={bean.name}
-  description={bean.description}
+  title={product.name}
+  description={product.description}
 >
   <section class="py-16">
     <div class="mx-auto max-w-content px-4">
-      <a href="/beans" class="text-sm text-coffee-600 hover:text-coffee-700">
-        ← 豆一覧に戻る
+      <a href="/products" class="text-sm text-coffee-600 hover:text-coffee-700">
+        ← 商品一覧に戻る
       </a>
 
       <article class="mt-8">
-        <h1 class="text-3xl font-bold text-gray-900">{bean.name}</h1>
+        <h1 class="text-3xl font-bold text-gray-900">{product.name}</h1>
         <div class="mt-4 flex flex-wrap gap-2">
-          {bean.roastLevel?.map((level: string) => (
+          {product.roastLevel?.map((level: string) => (
             <span class="rounded-full bg-coffee-50 px-3 py-1 text-xs font-medium text-coffee-700">
               {level}
             </span>
           ))}
-          {bean.isRecommended && (
+          {product.isRecommended && (
             <span class="rounded-full bg-amber-50 px-3 py-1 text-xs font-medium text-amber-700">
               おすすめ
             </span>
           )}
-          {bean.isSeasonal && (
+          {product.isSeasonal && (
             <span class="rounded-full bg-green-50 px-3 py-1 text-xs font-medium text-green-700">
               季節限定
             </span>
@@ -45,19 +45,21 @@ const { bean } = Astro.props;
         </div>
 
         <dl class="mt-8 space-y-4">
-          <div>
-            <dt class="text-sm font-medium text-gray-500">産地</dt>
-            <dd class="mt-1 text-gray-900">{bean.origin}</dd>
-          </div>
-          {bean.priceRange && (
+          {product.origin && (
+            <div>
+              <dt class="text-sm font-medium text-gray-500">産地</dt>
+              <dd class="mt-1 text-gray-900">{product.origin}</dd>
+            </div>
+          )}
+          {product.priceRange && (
             <div>
               <dt class="text-sm font-medium text-gray-500">価格帯</dt>
-              <dd class="mt-1 text-gray-900">{bean.priceRange}</dd>
+              <dd class="mt-1 text-gray-900">{product.priceRange}</dd>
             </div>
           )}
           <div>
             <dt class="text-sm font-medium text-gray-500">特徴</dt>
-            <dd class="mt-1 leading-relaxed text-gray-700">{bean.description}</dd>
+            <dd class="mt-1 leading-relaxed text-gray-700">{product.description}</dd>
           </div>
         </dl>
       </article>

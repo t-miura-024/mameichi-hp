@@ -14,7 +14,7 @@ const client = createClient({
 // Types – microCMS schema (requirements-specification.md §3)
 // ----------------------------------------------------------------
 
-export type NewsCategory = "新着豆" | "イベント" | "営業案内" | "その他";
+export type NewsCategory = "新着商品" | "イベント" | "営業案内" | "その他";
 
 export type RoastLevel = "浅煎り" | "中煎り" | "中深煎り" | "深煎り";
 
@@ -25,11 +25,11 @@ export type News = {
   category?: NewsCategory[];
 } & MicroCMSListContent;
 
-export type Bean = {
+export type Product = {
   name: string;
   description: string;
-  origin: string;
-  roastLevel: RoastLevel[];
+  origin?: string;
+  roastLevel?: RoastLevel[];
   priceRange?: string;
   image?: MicroCMSImage;
   isRecommended?: boolean;
@@ -55,16 +55,16 @@ export async function getNewsDetail(contentId: string) {
   });
 }
 
-export async function getBeansList(limit = 100, offset = 0) {
-  return client.getList<Bean>({
-    endpoint: "beans",
+export async function getProductList(limit = 100, offset = 0) {
+  return client.getList<Product>({
+    endpoint: "products",
     queries: { limit, offset, orders: "sortOrder" },
   });
 }
 
-export async function getBeansDetail(contentId: string) {
-  return client.getListDetail<Bean>({
-    endpoint: "beans",
+export async function getProductDetail(contentId: string) {
+  return client.getListDetail<Product>({
+    endpoint: "products",
     contentId,
   });
 }
