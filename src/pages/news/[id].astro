@@ -40,6 +40,18 @@ const { news } = Astro.props;
           <h1 class="mt-2 text-3xl font-bold text-gray-900">{news.title}</h1>
         </header>
 
+        {news.thumbnail && (
+          <div class="mt-6 overflow-hidden rounded-lg">
+            <img
+              src={`${news.thumbnail.url}?w=960`}
+              alt=""
+              width="960"
+              height={Math.round(960 * (news.thumbnail.height / news.thumbnail.width))}
+              class="w-full"
+            />
+          </div>
+        )}
+
         <div
           class="prose prose-gray mt-8 max-w-none"
           set:html={news.body}

@@ -1,5 +1,9 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import ProductCard from "../../components/ProductCard.astro";
+import { getProductList } from "../../lib/microcms";
+
+const { contents: products } = await getProductList();
 ---
 
 <BaseLayout
@@ -13,23 +17,78 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
         常時20〜30種類の商品を取り揃えています。
       </p>
 
-      <!-- Filter (placeholder) -->
-      <div class="mt-8 flex flex-wrap gap-2">
-        <span class="rounded-full bg-coffee-600 px-4 py-1.5 text-sm text-white">すべて</span>
-        <span class="rounded-full border border-gray-300 px-4 py-1.5 text-sm text-gray-600">浅煎り</span>
-        <span class="rounded-full border border-gray-300 px-4 py-1.5 text-sm text-gray-600">中煎り</span>
-        <span class="rounded-full border border-gray-300 px-4 py-1.5 text-sm text-gray-600">中深煎り</span>
-        <span class="rounded-full border border-gray-300 px-4 py-1.5 text-sm text-gray-600">深煎り</span>
-        <span class="rounded-full border border-gray-300 px-4 py-1.5 text-sm text-gray-600">おすすめ</span>
-        <span class="rounded-full border border-gray-300 px-4 py-1.5 text-sm text-gray-600">季節限定</span>
+      <div id="product-filters" class="mt-8 flex flex-wrap gap-2">
+        <button type="button" data-filter="all" class="filter-btn active rounded-full bg-coffee-600 px-4 py-1.5 text-sm text-white transition-colors">すべて</button>
+        <button type="button" data-filter="浅煎り" class="filter-btn rounded-full border border-gray-300 px-4 py-1.5 text-sm text-gray-600 transition-colors hover:border-coffee-300 hover:text-coffee-600">浅煎り</button>
+        <button type="button" data-filter="中煎り" class="filter-btn rounded-full border border-gray-300 px-4 py-1.5 text-sm text-gray-600 transition-colors hover:border-coffee-300 hover:text-coffee-600">中煎り</button>
+        <button type="button" data-filter="中深煎り" class="filter-btn rounded-full border border-gray-300 px-4 py-1.5 text-sm text-gray-600 transition-colors hover:border-coffee-300 hover:text-coffee-600">中深煎り</button>
+        <button type="button" data-filter="深煎り" class="filter-btn rounded-full border border-gray-300 px-4 py-1.5 text-sm text-gray-600 transition-colors hover:border-coffee-300 hover:text-coffee-600">深煎り</button>
+        <button type="button" data-filter="recommended" class="filter-btn rounded-full border border-gray-300 px-4 py-1.5 text-sm text-gray-600 transition-colors hover:border-coffee-300 hover:text-coffee-600">おすすめ</button>
+        <button type="button" data-filter="seasonal" class="filter-btn rounded-full border border-gray-300 px-4 py-1.5 text-sm text-gray-600 transition-colors hover:border-coffee-300 hover:text-coffee-600">季節限定</button>
       </div>
 
-      <!-- Product list placeholder -->
-      <div class="mt-8">
-        <p class="text-sm text-gray-500">
-          ※ microCMS 連携後、商品がカード形式で表示されます。
-        </p>
-      </div>
+      {products.length > 0 ? (
+        <div id="product-grid" class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {products.map((product) => (
+            <ProductCard product={product} />
+          ))}
+        </div>
+      ) : (
+        <p class="mt-8 text-sm text-gray-500">現在商品はありません。</p>
+      )}
+
+      <p id="no-results" class="mt-8 hidden text-sm text-gray-500">
+        該当する商品がありません。
+      </p>
     </div>
   </section>
 </BaseLayout>
+
+<script>
+  const buttons = document.querySelectorAll<HTMLButtonElement>("#product-filters .filter-btn");
+  const grid = document.getElementById("product-grid");
+  const noResults = document.getElementById("no-results");
+  const cards = grid ? Array.from(grid.children) as HTMLElement[] : [];
+
+  const ACTIVE_CLASSES = ["bg-coffee-600", "text-white", "border-coffee-600"];
+  const INACTIVE_CLASSES = ["border-gray-300", "text-gray-600"];
+
+  function setActive(btn: HTMLButtonElement) {
+    buttons.forEach((b) => {
+      b.classList.remove(...ACTIVE_CLASSES, "active");
+      b.classList.add(...INACTIVE_CLASSES);
+    });
+    btn.classList.remove(...INACTIVE_CLASSES);
+    btn.classList.add(...ACTIVE_CLASSES, "active");
+  }
+
+  function filterCards(filter: string) {
+    let visibleCount = 0;
+    cards.forEach((card) => {
+      const roast: string[] = JSON.parse(card.dataset.roast || "[]");
+      const isRecommended = card.dataset.recommended === "true";
+      const isSeasonal = card.dataset.seasonal === "true";
+
+      let show = false;
+      if (filter === "all") show = true;
+      else if (filter === "recommended") show = isRecommended;
+      else if (filter === "seasonal") show = isSeasonal;
+      else show = roast.includes(filter);
+
+      card.style.display = show ? "" : "none";
+      if (show) visibleCount++;
+    });
+
+    if (noResults) {
+      noResults.classList.toggle("hidden", visibleCount > 0);
+    }
+  }
+
+  buttons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const filter = btn.dataset.filter ?? "all";
+      setActive(btn);
+      filterCards(filter);
+    });
+  });
+</script>

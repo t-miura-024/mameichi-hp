@@ -1,5 +1,9 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import NewsCard from "../../components/NewsCard.astro";
+import { getNewsList } from "../../lib/microcms";
+
+const { contents: newsList } = await getNewsList();
 ---
 
 <BaseLayout
@@ -10,12 +14,15 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
     <div class="mx-auto max-w-content px-4">
       <h1 class="text-3xl font-bold text-gray-900">お知らせ</h1>
 
-      <!-- News list placeholder -->
-      <div class="mt-8">
-        <p class="text-sm text-gray-500">
-          ※ microCMS 連携後、お知らせ記事の一覧が表示されます。
-        </p>
-      </div>
+      {newsList.length > 0 ? (
+        <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {newsList.map((news) => (
+            <NewsCard news={news} />
+          ))}
+        </div>
+      ) : (
+        <p class="mt-8 text-sm text-gray-500">現在お知らせはありません。</p>
+      )}
     </div>
   </section>
 </BaseLayout>

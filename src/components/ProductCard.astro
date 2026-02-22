@@ -1,0 +1,62 @@
+---
+import type { Product } from "../lib/microcms";
+
+interface Props {
+  product: Product;
+}
+
+const { product } = Astro.props;
+---
+
+<a
+  href={`/products/${product.id}`}
+  class="group block overflow-hidden rounded-lg border border-gray-200 transition hover:shadow-md"
+  data-roast={JSON.stringify(product.roastLevel ?? [])}
+  data-recommended={product.isRecommended ? "true" : "false"}
+  data-seasonal={product.isSeasonal ? "true" : "false"}
+>
+  {product.image ? (
+    <div class="aspect-square overflow-hidden bg-gray-100">
+      <img
+        src={`${product.image.url}?w=480&h=480&fit=crop`}
+        alt={product.name}
+        width="480"
+        height="480"
+        loading="lazy"
+        class="h-full w-full object-cover transition-transform group-hover:scale-105"
+      />
+    </div>
+  ) : (
+    <div class="flex aspect-square items-center justify-center bg-coffee-50">
+      <span class="text-4xl text-coffee-200">☕</span>
+    </div>
+  )}
+  <div class="p-4">
+    <h3 class="font-semibold text-gray-900 group-hover:text-coffee-600">
+      {product.name}
+    </h3>
+    <div class="mt-2 flex flex-wrap gap-1.5">
+      {product.roastLevel?.map((level: string) => (
+        <span class="rounded-full bg-coffee-50 px-2 py-0.5 text-xs font-medium text-coffee-700">
+          {level}
+        </span>
+      ))}
+      {product.isRecommended && (
+        <span class="rounded-full bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-700">
+          おすすめ
+        </span>
+      )}
+      {product.isSeasonal && (
+        <span class="rounded-full bg-green-50 px-2 py-0.5 text-xs font-medium text-green-700">
+          季節限定
+        </span>
+      )}
+    </div>
+    {product.origin && (
+      <p class="mt-2 text-xs text-gray-500">産地: {product.origin}</p>
+    )}
+    {product.priceRange && (
+      <p class="mt-1 text-sm font-medium text-gray-700">{product.priceRange}</p>
+    )}
+  </div>
+</a>

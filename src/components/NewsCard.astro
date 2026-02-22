@@ -1,0 +1,42 @@
+---
+import type { News } from "../lib/microcms";
+
+interface Props {
+  news: News;
+}
+
+const { news } = Astro.props;
+const date = new Date(news.publishedAt).toLocaleDateString("ja-JP");
+---
+
+<a href={`/news/${news.id}`} class="group block overflow-hidden rounded-lg border border-gray-200 transition hover:shadow-md">
+  {news.thumbnail ? (
+    <div class="aspect-video overflow-hidden bg-gray-100">
+      <img
+        src={`${news.thumbnail.url}?w=640&h=360&fit=crop`}
+        alt=""
+        width="640"
+        height="360"
+        loading="lazy"
+        class="h-full w-full object-cover transition-transform group-hover:scale-105"
+      />
+    </div>
+  ) : (
+    <div class="flex aspect-video items-center justify-center bg-coffee-50">
+      <span class="text-3xl text-coffee-200">☕</span>
+    </div>
+  )}
+  <div class="p-4">
+    <div class="flex items-center gap-2">
+      <time datetime={news.publishedAt} class="text-xs text-gray-500">{date}</time>
+      {news.category && news.category.length > 0 && (
+        <span class="rounded-full bg-coffee-50 px-2 py-0.5 text-xs font-medium text-coffee-700">
+          {news.category[0]}
+        </span>
+      )}
+    </div>
+    <h3 class="mt-2 text-sm font-semibold leading-snug text-gray-900 group-hover:text-coffee-600">
+      {news.title}
+    </h3>
+  </div>
+</a>

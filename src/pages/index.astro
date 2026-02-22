@@ -1,5 +1,13 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import ProductCard from "../components/ProductCard.astro";
+import NewsCard from "../components/NewsCard.astro";
+import { getProductList, getNewsList } from "../lib/microcms";
+
+const { contents: allProducts } = await getProductList();
+const recommendedProducts = allProducts.filter((p) => p.isRecommended).slice(0, 4);
+
+const { contents: latestNews } = await getNewsList(3);
 ---
 
 <BaseLayout title="焙煎工房 函館豆壱">
@@ -36,10 +44,18 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   <section class="bg-gray-50 py-16">
     <div class="mx-auto max-w-content px-4">
       <h2 class="text-center text-2xl font-bold text-gray-900">おすすめ商品</h2>
-      <p class="mt-2 text-center text-sm text-gray-500">
-        ※ microCMS 連携後、おすすめ商品が表示されます
-      </p>
-      <div class="mt-6 text-center">
+      {recommendedProducts.length > 0 ? (
+        <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {recommendedProducts.map((product) => (
+            <ProductCard product={product} />
+          ))}
+        </div>
+      ) : (
+        <p class="mt-4 text-center text-sm text-gray-500">
+          おすすめ商品の情報を準備中です。
+        </p>
+      )}
+      <div class="mt-8 text-center">
         <a
           href="/products"
           class="text-sm font-medium text-coffee-600 hover:text-coffee-700"
@@ -54,10 +70,18 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   <section class="py-16">
     <div class="mx-auto max-w-content px-4">
       <h2 class="text-center text-2xl font-bold text-gray-900">お知らせ</h2>
-      <p class="mt-2 text-center text-sm text-gray-500">
-        ※ microCMS 連携後、最新のお知らせが表示されます
-      </p>
-      <div class="mt-6 text-center">
+      {latestNews.length > 0 ? (
+        <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {latestNews.map((news) => (
+            <NewsCard news={news} />
+          ))}
+        </div>
+      ) : (
+        <p class="mt-4 text-center text-sm text-gray-500">
+          お知らせの情報を準備中です。
+        </p>
+      )}
+      <div class="mt-8 text-center">
         <a
           href="/news"
           class="text-sm font-medium text-coffee-600 hover:text-coffee-700"

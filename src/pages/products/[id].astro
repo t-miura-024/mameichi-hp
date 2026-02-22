@@ -24,44 +24,62 @@ const { product } = Astro.props;
         ← 商品一覧に戻る
       </a>
 
-      <article class="mt-8">
-        <h1 class="text-3xl font-bold text-gray-900">{product.name}</h1>
-        <div class="mt-4 flex flex-wrap gap-2">
-          {product.roastLevel?.map((level: string) => (
-            <span class="rounded-full bg-coffee-50 px-3 py-1 text-xs font-medium text-coffee-700">
-              {level}
-            </span>
-          ))}
-          {product.isRecommended && (
-            <span class="rounded-full bg-amber-50 px-3 py-1 text-xs font-medium text-amber-700">
-              おすすめ
-            </span>
-          )}
-          {product.isSeasonal && (
-            <span class="rounded-full bg-green-50 px-3 py-1 text-xs font-medium text-green-700">
-              季節限定
-            </span>
-          )}
-        </div>
-
-        <dl class="mt-8 space-y-4">
-          {product.origin && (
-            <div>
-              <dt class="text-sm font-medium text-gray-500">産地</dt>
-              <dd class="mt-1 text-gray-900">{product.origin}</dd>
-            </div>
-          )}
-          {product.priceRange && (
-            <div>
-              <dt class="text-sm font-medium text-gray-500">価格帯</dt>
-              <dd class="mt-1 text-gray-900">{product.priceRange}</dd>
-            </div>
-          )}
-          <div>
-            <dt class="text-sm font-medium text-gray-500">特徴</dt>
-            <dd class="mt-1 leading-relaxed text-gray-700">{product.description}</dd>
+      <article class="mt-8 md:grid md:grid-cols-2 md:gap-10">
+        {product.image ? (
+          <div class="overflow-hidden rounded-lg">
+            <img
+              src={`${product.image.url}?w=640`}
+              alt={product.name}
+              width="640"
+              height={Math.round(640 * (product.image.height / product.image.width))}
+              class="w-full"
+            />
           </div>
-        </dl>
+        ) : (
+          <div class="flex aspect-square items-center justify-center rounded-lg bg-coffee-50">
+            <span class="text-6xl text-coffee-200">☕</span>
+          </div>
+        )}
+
+        <div class="mt-6 md:mt-0">
+          <h1 class="text-3xl font-bold text-gray-900">{product.name}</h1>
+          <div class="mt-4 flex flex-wrap gap-2">
+            {product.roastLevel?.map((level: string) => (
+              <span class="rounded-full bg-coffee-50 px-3 py-1 text-xs font-medium text-coffee-700">
+                {level}
+              </span>
+            ))}
+            {product.isRecommended && (
+              <span class="rounded-full bg-amber-50 px-3 py-1 text-xs font-medium text-amber-700">
+                おすすめ
+              </span>
+            )}
+            {product.isSeasonal && (
+              <span class="rounded-full bg-green-50 px-3 py-1 text-xs font-medium text-green-700">
+                季節限定
+              </span>
+            )}
+          </div>
+
+          <dl class="mt-8 space-y-4">
+            {product.origin && (
+              <div>
+                <dt class="text-sm font-medium text-gray-500">産地</dt>
+                <dd class="mt-1 text-gray-900">{product.origin}</dd>
+              </div>
+            )}
+            {product.priceRange && (
+              <div>
+                <dt class="text-sm font-medium text-gray-500">価格帯</dt>
+                <dd class="mt-1 text-gray-900">{product.priceRange}</dd>
+              </div>
+            )}
+            <div>
+              <dt class="text-sm font-medium text-gray-500">特徴</dt>
+              <dd class="mt-1 leading-relaxed text-gray-700">{product.description}</dd>
+            </div>
+          </dl>
+        </div>
       </article>
     </div>
   </section>
