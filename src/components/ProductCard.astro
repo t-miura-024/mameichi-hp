@@ -1,6 +1,7 @@
 ---
 import type { Product } from "../lib/microcms";
 import { getProductSalesStatus } from "../lib/microcms";
+import SalesStatusBadge from "./SalesStatusBadge.astro";
 
 interface Props {
   product: Product;
@@ -50,21 +51,7 @@ const isUnavailable = status === "売り切れ" || status === "期間終了";
       {product.name}
     </h3>
     <div class="mt-2 flex flex-wrap gap-1.5">
-      {status === "売り切れ" && (
-        <span class="rounded-full bg-red-50 px-2 py-0.5 text-xs font-medium text-red-700">
-          {status}
-        </span>
-      )}
-      {status === "期間終了" && (
-        <span class="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-500">
-          {status}
-        </span>
-      )}
-      {status === "入荷待ち" && (
-        <span class="rounded-full bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-700">
-          {status}
-        </span>
-      )}
+      <SalesStatusBadge status={status} class="px-2 py-0.5" />
       {product.roastLevel?.map((level: string) => (
         <span class="rounded-full bg-coffee-50 px-2 py-0.5 text-xs font-medium text-coffee-700">
           {level}

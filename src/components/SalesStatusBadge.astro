@@ -1,0 +1,21 @@
+---
+import type { SalesStatus } from "../lib/microcms";
+
+interface Props {
+  status: SalesStatus;
+  class?: string;
+}
+
+const { status, class: className } = Astro.props;
+
+const colorClasses: Record<SalesStatus, string> = {
+  "販売中": "bg-emerald-50 text-emerald-700",
+  "入荷待ち": "bg-blue-50 text-blue-700",
+  "売り切れ": "bg-red-50 text-red-700",
+  "期間終了": "bg-gray-100 text-gray-500",
+};
+---
+
+<span class:list={["rounded-full text-xs font-medium", colorClasses[status], className]}>
+  {status}
+</span>
