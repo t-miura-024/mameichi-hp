@@ -1,0 +1,152 @@
+---
+interface Slide {
+  type: "image" | "video";
+  src: string;
+  alt?: string;
+}
+
+interface Props {
+  slides: Slide[];
+  interval?: number;
+}
+
+const { slides, interval = 6000 } = Astro.props;
+---
+
+<section
+  class="hero-carousel-wrapper relative w-full overflow-hidden"
+  aria-roledescription="carousel"
+  aria-label="メインビジュアル"
+>
+  <div class="hero-swiper swiper h-[60vh] w-full md:h-[80vh]" data-interval={interval}>
+    <div class="swiper-wrapper">
+      {slides.map((slide, i) => (
+        <div
+          class="swiper-slide"
+          aria-roledescription="slide"
+          aria-label={`スライド ${i + 1} / ${slides.length}`}
+        >
+          {slide.type === "image" ? (
+            <img
+              src={slide.src}
+              alt={slide.alt || ""}
+              class="h-full w-full object-cover"
+              loading={i === 0 ? "eager" : "lazy"}
+              decoding={i === 0 ? "sync" : "async"}
+            />
+          ) : (
+            <video
+              src={slide.src}
+              autoplay
+              muted
+              loop
+              playsinline
+              aria-hidden="true"
+              class="h-full w-full object-cover"
+              data-hero-video
+            />
+          )}
+        </div>
+      ))}
+    </div>
+
+    {/* Overlay */}
+    <div class="pointer-events-none absolute inset-0 z-10 flex items-center justify-center bg-black/40">
+      <div class="text-center">
+        <h1 class="text-3xl font-bold tracking-wider text-white drop-shadow-lg md:text-5xl lg:text-6xl">
+          焙煎工房 函館豆壱
+        </h1>
+        <p class="mt-4 text-base font-medium tracking-wide text-white/90 drop-shadow-md md:text-xl">
+          一杯のために、一粒から。
+        </p>
+      </div>
+    </div>
+
+    {/* Pagination dots */}
+    <div class="hero-pagination z-20"></div>
+  </div>
+</section>
+
+<script>
+  import Swiper from "swiper";
+  import { Autoplay, Pagination, EffectFade } from "swiper/modules";
+  import "swiper/css";
+  import "swiper/css/effect-fade";
+  import "swiper/css/pagination";
+
+  function initHeroCarousel() {
+    const el = document.querySelector<HTMLElement>(".hero-swiper");
+    if (!el) return;
+
+    const interval = Number(el.dataset.interval) || 6000;
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    const swiper = new Swiper(el, {
+      modules: [Autoplay, Pagination, EffectFade],
+      effect: "fade",
+      fadeEffect: { crossFade: true },
+      loop: true,
+      speed: 1000,
+      autoplay: prefersReducedMotion
+        ? false
+        : { delay: interval, disableOnInteraction: false },
+      pagination: {
+        el: ".hero-pagination",
+        clickable: true,
+      },
+    });
+
+    function handleVideoPlayback() {
+      const slides = el!.querySelectorAll(".swiper-slide");
+      slides.forEach((slide) => {
+        const video = slide.querySelector<HTMLVideoElement>("[data-hero-video]");
+        if (!video) return;
+
+        if (slide.classList.contains("swiper-slide-active")) {
+          video.currentTime = 0;
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      });
+    }
+
+    swiper.on("slideChangeTransitionStart", handleVideoPlayback);
+    handleVideoPlayback();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initHeroCarousel);
+  } else {
+    initHeroCarousel();
+  }
+</script>
+
+<style is:global>
+  .hero-pagination {
+    position: absolute;
+    bottom: 1.25rem;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .hero-pagination .swiper-pagination-bullet {
+    width: 0.625rem;
+    height: 0.625rem;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.5);
+    opacity: 1;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    cursor: pointer;
+  }
+
+  .hero-pagination .swiper-pagination-bullet-active {
+    background: #ffffff;
+    transform: scale(1.25);
+  }
+</style>

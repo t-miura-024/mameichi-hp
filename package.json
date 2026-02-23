@@ -14,6 +14,7 @@
     "@tailwindcss/typography": "0.5",
     "astro": "^5.17.1",
     "microcms-js-sdk": "^3.3.0",
+    "swiper": "^12.1.2",
     "tailwindcss": "3"
   }
 }
