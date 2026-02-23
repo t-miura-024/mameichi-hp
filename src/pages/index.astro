@@ -105,8 +105,33 @@ const { contents: latestNews } = await getNewsList(3);
     </div>
   </section>
 
-  <!-- Access snippet -->
+  <!-- Instagram -->
   <section class="bg-gray-50 py-16">
+    <div class="mx-auto max-w-content px-4">
+      <h2 class="text-center text-2xl font-bold text-gray-900">Instagram</h2>
+      <p class="mt-2 text-center text-sm text-gray-500">
+        最新情報は Instagram でも発信しています
+      </p>
+      <div class="mt-8">
+        <!-- TODO: YOUR_BEHOLD_FEED_ID を Behold で作成したフィード ID に差し替えてください -->
+        <div data-behold-id="YOUR_BEHOLD_FEED_ID"></div>
+        <script src="https://w.behold.so/widget.js" type="module"></script>
+      </div>
+      <div class="mt-8 text-center">
+        <a
+          href="https://www.instagram.com/hakodate_mameichi"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-sm font-medium text-coffee-600 hover:text-coffee-700"
+        >
+          Instagram を見る →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Access snippet -->
+  <section class="py-16">
     <div class="mx-auto max-w-content px-4 text-center">
       <h2 class="text-2xl font-bold text-gray-900">アクセス</h2>
       <p class="mt-4 text-gray-600">〒040-0011 北海道函館市本町31-35</p>
