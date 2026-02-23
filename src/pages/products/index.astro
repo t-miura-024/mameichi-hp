@@ -1,9 +1,10 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import ProductCard from "../../components/ProductCard.astro";
-import { getProductList } from "../../lib/microcms";
+import { getProductList, sortProductsBySalesStatus } from "../../lib/microcms";
 
-const { contents: products } = await getProductList();
+const { contents: rawProducts } = await getProductList();
+const products = sortProductsBySalesStatus(rawProducts);
 ---
 
 <BaseLayout
@@ -18,13 +19,13 @@ const { contents: products } = await getProductList();
       </p>
 
       <div id="product-filters" class="mt-8 flex flex-wrap gap-2">
-        <button type="button" data-filter="all" class="filter-btn active rounded-full bg-coffee-600 px-4 py-1.5 text-sm text-white transition-colors">すべて</button>
-        <button type="button" data-filter="浅煎り" class="filter-btn rounded-full border border-gray-300 px-4 py-1.5 text-sm text-gray-600 transition-colors hover:border-coffee-300 hover:text-coffee-600">浅煎り</button>
-        <button type="button" data-filter="中煎り" class="filter-btn rounded-full border border-gray-300 px-4 py-1.5 text-sm text-gray-600 transition-colors hover:border-coffee-300 hover:text-coffee-600">中煎り</button>
-        <button type="button" data-filter="中深煎り" class="filter-btn rounded-full border border-gray-300 px-4 py-1.5 text-sm text-gray-600 transition-colors hover:border-coffee-300 hover:text-coffee-600">中深煎り</button>
-        <button type="button" data-filter="深煎り" class="filter-btn rounded-full border border-gray-300 px-4 py-1.5 text-sm text-gray-600 transition-colors hover:border-coffee-300 hover:text-coffee-600">深煎り</button>
-        <button type="button" data-filter="recommended" class="filter-btn rounded-full border border-gray-300 px-4 py-1.5 text-sm text-gray-600 transition-colors hover:border-coffee-300 hover:text-coffee-600">おすすめ</button>
-        <button type="button" data-filter="seasonal" class="filter-btn rounded-full border border-gray-300 px-4 py-1.5 text-sm text-gray-600 transition-colors hover:border-coffee-300 hover:text-coffee-600">季節限定</button>
+        <button type="button" data-filter="all" class="filter-btn active rounded-full border border-coffee-600 bg-coffee-600 px-4 py-1.5 text-sm text-white transition-colors">すべて</button>
+        <button type="button" data-filter="recommended" class="filter-btn rounded-full border border-gray-300 px-4 py-1.5 text-sm text-gray-600 transition-colors hover:border-coffee-300 hover:text-coffee-600 focus-visible:border-coffee-300 focus-visible:text-coffee-600 focus-visible:outline-none">おすすめ</button>
+        <button type="button" data-filter="seasonal" class="filter-btn rounded-full border border-gray-300 px-4 py-1.5 text-sm text-gray-600 transition-colors hover:border-coffee-300 hover:text-coffee-600 focus-visible:border-coffee-300 focus-visible:text-coffee-600 focus-visible:outline-none">季節限定</button>
+        <button type="button" data-filter="浅煎り" class="filter-btn rounded-full border border-gray-300 px-4 py-1.5 text-sm text-gray-600 transition-colors hover:border-coffee-300 hover:text-coffee-600 focus-visible:border-coffee-300 focus-visible:text-coffee-600 focus-visible:outline-none">浅煎り</button>
+        <button type="button" data-filter="中煎り" class="filter-btn rounded-full border border-gray-300 px-4 py-1.5 text-sm text-gray-600 transition-colors hover:border-coffee-300 hover:text-coffee-600 focus-visible:border-coffee-300 focus-visible:text-coffee-600 focus-visible:outline-none">中煎り</button>
+        <button type="button" data-filter="中深煎り" class="filter-btn rounded-full border border-gray-300 px-4 py-1.5 text-sm text-gray-600 transition-colors hover:border-coffee-300 hover:text-coffee-600 focus-visible:border-coffee-300 focus-visible:text-coffee-600 focus-visible:outline-none">中深煎り</button>
+        <button type="button" data-filter="深煎り" class="filter-btn rounded-full border border-gray-300 px-4 py-1.5 text-sm text-gray-600 transition-colors hover:border-coffee-300 hover:text-coffee-600 focus-visible:border-coffee-300 focus-visible:text-coffee-600 focus-visible:outline-none">深煎り</button>
       </div>
 
       {products.length > 0 ? (
@@ -52,13 +53,14 @@ const { contents: products } = await getProductList();
 
   const ACTIVE_CLASSES = ["bg-coffee-600", "text-white", "border-coffee-600"];
   const INACTIVE_CLASSES = ["border-gray-300", "text-gray-600"];
+  const HOVER_CLASSES = ["hover:border-coffee-300", "hover:text-coffee-600", "focus-visible:border-coffee-300", "focus-visible:text-coffee-600", "focus-visible:outline-none"];
 
   function setActive(btn: HTMLButtonElement) {
     buttons.forEach((b) => {
       b.classList.remove(...ACTIVE_CLASSES, "active");
-      b.classList.add(...INACTIVE_CLASSES);
+      b.classList.add(...INACTIVE_CLASSES, ...HOVER_CLASSES);
     });
-    btn.classList.remove(...INACTIVE_CLASSES);
+    btn.classList.remove(...INACTIVE_CLASSES, ...HOVER_CLASSES);
     btn.classList.add(...ACTIVE_CLASSES, "active");
   }
 
@@ -81,6 +83,30 @@ const { contents: products } = await getProductList();
 
     if (noResults) {
       noResults.classList.toggle("hidden", visibleCount > 0);
+    }
+
+    reorderByStatus();
+  }
+
+  const STATUS_ORDER: Record<string, number> = {
+    "販売中": 0,
+    "入荷待ち": 1,
+    "売り切れ": 2,
+    "期間終了": 3,
+  };
+
+  function reorderByStatus() {
+    if (!grid) return;
+    const sorted = [...cards]
+      .filter((c) => c.style.display !== "none")
+      .sort((a, b) => {
+        const sa = STATUS_ORDER[(a as HTMLElement).dataset.salesStatus ?? "販売中"] ?? 0;
+        const sb = STATUS_ORDER[(b as HTMLElement).dataset.salesStatus ?? "販売中"] ?? 0;
+        return sa - sb;
+      });
+    const hidden = cards.filter((c) => c.style.display === "none");
+    for (const card of [...sorted, ...hidden]) {
+      grid.appendChild(card);
     }
   }
 

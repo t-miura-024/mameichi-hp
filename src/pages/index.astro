@@ -3,11 +3,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import HeroCarousel from "../components/HeroCarousel.astro";
 import ProductCard from "../components/ProductCard.astro";
 import NewsCard from "../components/NewsCard.astro";
-import { getProductList, getNewsList } from "../lib/microcms";
+import { getProductList, getNewsList, isProductAvailable } from "../lib/microcms";
 
 const { contents: allProducts } = await getProductList();
 const recommendedProducts = allProducts
-  .filter((p) => p.isRecommended)
+  .filter((p) => p.isRecommended && isProductAvailable(p))
   .slice(0, 4);
 
 const { contents: latestNews } = await getNewsList(3);

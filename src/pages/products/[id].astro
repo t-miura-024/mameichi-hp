@@ -1,6 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { getProductList, getProductDetail } from "../../lib/microcms";
+import { getProductList, getProductDetail, getProductSalesStatus } from "../../lib/microcms";
 import type { Product } from "../../lib/microcms";
 
 export async function getStaticPaths() {
@@ -12,6 +12,8 @@ export async function getStaticPaths() {
 }
 
 const { product } = Astro.props;
+const status = getProductSalesStatus(product);
+const isUnavailable = status === "売り切れ" || status === "期間終了";
 ---
 
 <BaseLayout
@@ -24,9 +26,27 @@ const { product } = Astro.props;
         ← 商品一覧に戻る
       </a>
 
-      <article class="mt-8 md:grid md:grid-cols-2 md:gap-10">
-        {product.image ? (
-          <div class="overflow-hidden rounded-lg">
+      {isUnavailable && (
+        <div class:list={[
+          "mt-6 rounded-lg border px-4 py-3 text-sm font-medium",
+          status === "売り切れ"
+            ? "border-red-200 bg-red-50 text-red-800"
+            : "border-gray-200 bg-gray-50 text-gray-700",
+        ]}>
+          {status === "売り切れ"
+            ? "この商品は現在売り切れです。再入荷についてはお問い合わせください。"
+            : "この商品の販売期間は終了しました。"}
+        </div>
+      )}
+      {status === "入荷待ち" && (
+        <div class="mt-6 rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm font-medium text-blue-800">
+          この商品は入荷待ちです。入荷次第、販売を開始します。
+        </div>
+      )}
+
+      <article class:list={["mt-8 md:grid md:grid-cols-2 md:gap-10", isUnavailable && "opacity-75 grayscale-[40%]"]}>
+        <div class="relative overflow-hidden rounded-lg">
+          {product.image ? (
             <img
               src={`${product.image.url}?w=640`}
               alt={product.name}
@@ -34,16 +54,38 @@ const { product } = Astro.props;
               height={Math.round(640 * (product.image.height / product.image.width))}
               class="w-full"
             />
-          </div>
-        ) : (
-          <div class="flex aspect-square items-center justify-center rounded-lg bg-coffee-50">
-            <span class="text-6xl text-coffee-200">☕</span>
-          </div>
-        )}
+          ) : (
+            <div class="flex aspect-square items-center justify-center bg-coffee-50">
+              <span class="text-6xl text-coffee-200">☕</span>
+            </div>
+          )}
+          {isUnavailable && (
+            <div class="absolute inset-0 flex items-center justify-center bg-black/40">
+              <span class="rounded-md bg-white/90 px-4 py-2 text-base font-bold text-gray-800">
+                {status}
+              </span>
+            </div>
+          )}
+        </div>
 
         <div class="mt-6 md:mt-0">
           <h1 class="text-3xl font-bold text-gray-900">{product.name}</h1>
           <div class="mt-4 flex flex-wrap gap-2">
+            {status === "売り切れ" && (
+              <span class="rounded-full bg-red-50 px-3 py-1 text-xs font-medium text-red-700">
+                {status}
+              </span>
+            )}
+            {status === "期間終了" && (
+              <span class="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-500">
+                {status}
+              </span>
+            )}
+            {status === "入荷待ち" && (
+              <span class="rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700">
+                {status}
+              </span>
+            )}
             {product.roastLevel?.map((level: string) => (
               <span class="rounded-full bg-coffee-50 px-3 py-1 text-xs font-medium text-coffee-700">
                 {level}
