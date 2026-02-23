@@ -3,7 +3,11 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import HeroCarousel from "../components/HeroCarousel.astro";
 import ProductCard from "../components/ProductCard.astro";
 import NewsCard from "../components/NewsCard.astro";
-import { getProductList, getNewsList, isProductAvailable } from "../lib/microcms";
+import {
+  getProductList,
+  getNewsList,
+  isProductAvailable,
+} from "../lib/microcms";
 
 const { contents: allProducts } = await getProductList();
 const recommendedProducts = allProducts
@@ -113,9 +117,16 @@ const { contents: latestNews } = await getNewsList(3);
         最新情報は Instagram でも発信しています
       </p>
       <div class="mt-8">
-        <!-- TODO: YOUR_BEHOLD_FEED_ID を Behold で作成したフィード ID に差し替えてください -->
-        <div data-behold-id="YOUR_BEHOLD_FEED_ID"></div>
-        <script src="https://w.behold.so/widget.js" type="module"></script>
+        <div data-behold-id="Pg6tsW1q4CExr16yQRio"></div>
+        <script>
+          (function () {
+            const d = document,
+              s = d.createElement("script");
+            s.type = "module";
+            s.src = "https://w.behold.so/widget.js";
+            d.head.append(s);
+          })();
+        </script>
       </div>
       <div class="mt-8 text-center">
         <a
